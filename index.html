@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stories</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="phone">
+      <header class="tray">
+        <button type="button" class="add" id="add-story" aria-label="Add a story">
+          <span aria-hidden="true">+</span>
+        </button>
+        <ul class="rings" id="rings"></ul>
+      </header>
+      <p id="error" class="error" role="alert" hidden></p>
+      <input id="file" type="file" accept="image/*,video/*" hidden />
+    </div>
+
+    <div id="viewer" class="viewer" hidden role="dialog" aria-modal="true" aria-label="Story">
+      <div class="stage" id="stage">
+        <div class="bars" id="bars"></div>
+        <button type="button" class="close" id="close-story" aria-label="Close">×</button>
+        <img id="story-image" alt="" draggable="false" />
+        <video id="story-video" playsinline preload="auto" disablepictureinpicture hidden></video>
+      </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
