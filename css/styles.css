@@ -1,12 +1,18 @@
+/* ============================================================
+   24-hr Stories — Black & White redesign
+   Design tokens: #000000 (black) | #ffffff (white) only
+   ============================================================ */
+
 * {
   box-sizing: border-box;
 }
 
+/* ── Base ──────────────────────────────────────────────────── */
 body {
   margin: 0;
   min-height: 100dvh;
-  background: #111;
-  color: #fff;
+  background: #fff;
+  color: #000;
   font-family: system-ui, -apple-system, sans-serif;
   display: grid;
   place-items: center;
@@ -15,10 +21,11 @@ body {
 .phone {
   width: min(420px, 100%);
   min-height: 100dvh;
-  background: #000;
+  background: #fff;
   position: relative;
 }
 
+/* ── Tray ──────────────────────────────────────────────────── */
 .tray {
   display: flex;
   align-items: center;
@@ -26,12 +33,14 @@ body {
   overflow-x: auto;
   padding: 18px 14px 10px;
   scrollbar-width: none;
+  background: #fff;
 }
 
 .tray::-webkit-scrollbar {
   display: none;
 }
 
+/* ── Add Story button ──────────────────────────────────────── */
 .add {
   position: sticky;
   left: 0;
@@ -40,19 +49,28 @@ body {
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  border: 2px solid #3a3a3a;
-  background: #000;
-  color: #fff;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
   font-size: 34px;
   line-height: 1;
   cursor: pointer;
+  /* Ensure the sticky button doesn't blend into the tray */
+  box-shadow: none;
 }
 
 .add:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: progress;
 }
 
+/* Focus style — keyboard accessible */
+.add:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 2px;
+}
+
+/* ── Story rings list ──────────────────────────────────────── */
 .rings {
   display: flex;
   gap: 12px;
@@ -61,6 +79,14 @@ body {
   list-style: none;
 }
 
+/* ── Unseen story ring — bold double black ring with white gap ─
+   Layer breakdown (outside → in):
+     outer ring  : outline (3px black, offset 3px = white gap)
+     white gap   : outline-offset gap + img border
+     inner ring  : button background (#000) visible through padding
+     white gap   : img border (3px solid #fff)
+     thumbnail   : the img itself
+   ─────────────────────────────────────────────────────────── */
 .ring {
   flex: none;
   width: 72px;
@@ -68,42 +94,66 @@ body {
   padding: 3px;
   border: 0;
   border-radius: 50%;
-  background: conic-gradient(from 210deg, #f9ce34, #ee2a7b 45%, #6228d7 80%, #f9ce34);
+  /* Inner ring: solid black */
+  background: #000;
   cursor: pointer;
+  /* Outer ring: 3px black line, 3px white gap */
+  outline: 3px solid #000;
+  outline-offset: 3px;
 }
 
+/* ── Seen story ring — single thin black outline ───────────── */
 .ring.seen {
-  background: #3a3a3a;
+  background: #fff;
+  outline: 1px solid #000;
+  outline-offset: 2px;
 }
 
+/* ── Thumbnail image inside every ring ────────────────────── */
 .ring img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
-  border: 3px solid #000;
+  /* White gap between thumbnail and the black ring body */
+  border: 3px solid #fff;
 }
 
+/* Seen ring: image border matches the white phone bg */
+.ring.seen img {
+  border-color: #fff;
+}
+
+/* Focus style */
+.ring:focus-visible {
+  outline: 3px solid #000;
+  outline-offset: 4px;
+}
+
+/* ── Error message ─────────────────────────────────────────── */
 .error {
   margin: 4px 16px 0;
-  color: #ffb4b4;
+  color: #000;
   font-size: 14px;
 }
 
+/* ── Viewer overlay ────────────────────────────────────────── */
 .viewer {
   position: fixed;
   inset: 0;
   z-index: 10;
   display: grid;
   place-items: center;
-  background: rgba(0, 0, 0, 0.72);
+  /* Solid black — no transparency */
+  background: #000;
 }
 
 .viewer[hidden] {
   display: none;
 }
 
+/* ── Stage (story canvas) ──────────────────────────────────── */
 .stage {
   position: relative;
   width: min(420px, 100vw);
@@ -123,6 +173,7 @@ body {
   background: #000;
 }
 
+/* ── Progress bars ─────────────────────────────────────────── */
 .bars {
   position: absolute;
   top: 10px;
@@ -138,14 +189,17 @@ body {
   height: 3px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.35);
+  /* Unfilled segment: white bar with black outline via box-shadow */
+  background: #fff;
+  box-shadow: 0 0 0 1px #000;
 }
 
 .bar > span {
   display: block;
   width: 100%;
   height: 100%;
-  background: #fff;
+  /* Filled segment: solid black */
+  background: #000;
   transform: scaleX(0);
   transform-origin: left center;
 }
@@ -175,6 +229,7 @@ body {
   }
 }
 
+/* ── Close button ──────────────────────────────────────────── */
 .close {
   position: absolute;
   top: 22px;
@@ -182,21 +237,28 @@ body {
   z-index: 3;
   width: 36px;
   height: 36px;
-  border: 0;
+  /* Visible black border on white circle for contrast over media */
+  border: 2px solid #fff;
   border-radius: 50%;
-  background: transparent;
+  background: #000;
   color: #fff;
-  font-size: 28px;
+  font-size: 24px;
   line-height: 1;
   cursor: pointer;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  /* No text-shadow, no transparency */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@media (max-width: 699px) {
-  .viewer {
-    background: #000;
-  }
+.close:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
 
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 699px) {
+  /* Viewer already #000 globally; stage fills screen */
   .stage {
     width: 100vw;
     height: 100dvh;
@@ -205,7 +267,7 @@ body {
 
 @media (min-width: 700px) {
   body {
-    background: #1c1c1c;
+    background: #fff;
   }
 
   .phone {
@@ -213,6 +275,8 @@ body {
     min-height: 0;
     overflow: hidden;
     border-radius: 28px;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+    /* Black border instead of colored shadow */
+    border: 1px solid #000;
+    box-shadow: none;
   }
 }
